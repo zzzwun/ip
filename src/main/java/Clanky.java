@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Clanky {
     public static void main(String[] args) {
@@ -19,14 +20,35 @@ public class Clanky {
         Scanner scanner = new Scanner(System.in);
         String input = "";
 
-        // Scan for Input until Bye Command
+        // Initialize ArrayList
+        ArrayList<String> list = new ArrayList<>();
+
+        // Scan for Input
         while (true) {
             input = scanner.nextLine();
+
+            // Input 'bye' Command
             if (input.equals("bye")) {
                 break;
             }
+
+            // Input 'list' Command
+            if (input.equals("list")) {
+                System.out.println("\t=============================================");
+                if (list.isEmpty()) {
+                    System.out.println("\tNo Tasks Yet");
+                }
+                for (int i = 0; i < list.size(); i++) {
+                    System.out.println("\t" + (i + 1) + ". " + list.get(i));
+                }
+                System.out.println("\t=============================================");
+                continue;
+            }
+
+            // Adds to list
+            list.add(input);
             System.out.println("\t=============================================");
-            System.out.println("\t" + input);
+            System.out.println("\tadded: " + input);
             System.out.println("\t=============================================");
         }
 
