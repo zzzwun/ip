@@ -7,16 +7,13 @@ public class Clanky {
                 + " / ___| | |        / \\    | \\ | | | |/ / \\ \\ / /\n"
                 + "| |     | |       / _ \\   |  \\| | | ' /   \\ V / \n"
                 + "| |___  | |___   / ___ \\  | |\\  | | . \\    | |  \n"
-                + " \\____| |_____| /_/   \\_\\ |_| \\_| |_|\\_\\   |_|  \n";
+                + " \\____| |_____| /_/   \\_\\ |_| \\_| |_|\\_\\   |_|";
 
         System.out.println(banner);
-
-        System.out.println("=================================================\n");
-
+        System.out.println("=================================================");
         System.out.println("Hello! I'm Clanky.");
-        System.out.println("What can I do for you ?\n");
-
-        System.out.println("=================================================\n");
+        System.out.println("What can I do for you ?");
+        System.out.println("=================================================");
 
         // Initialize Scanner
         Scanner scanner = new Scanner(System.in);
