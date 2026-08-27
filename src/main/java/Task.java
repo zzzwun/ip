@@ -11,11 +11,15 @@ public class Task {
         return (isDone ? "X" : " ");
     }
 
-    public void setDone() {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setMark() {
         this.isDone = true;
     }
 
-    public void setNotDone() {
+    public void setUnmark() {
         this.isDone = false;
     }
 

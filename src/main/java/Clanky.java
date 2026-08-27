@@ -21,32 +21,60 @@ public class Clanky {
         String input = "";
 
         // Initialize ArrayList
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<Task> list = new ArrayList<>();
 
         // Scan for Input
         while (true) {
+            // Gets Input
             input = scanner.nextLine();
 
+            // Splits Up Input Into Command & Arguments
+            String[] parts = input.trim().split("\\s+", 2);
+            String command = parts[0];
+
             // Input 'bye' Command
-            if (input.equals("bye")) {
+            if (command.equals("bye")) {
                 break;
             }
 
             // Input 'list' Command
-            if (input.equals("list")) {
+            if (command.equals("list")) {
                 System.out.println("\t=============================================");
                 if (list.isEmpty()) {
                     System.out.println("\tNo Tasks Yet");
                 }
                 for (int i = 0; i < list.size(); i++) {
-                    System.out.println("\t" + (i + 1) + ". " + list.get(i));
+                    System.out.println("\t" + (i + 1) + ".[" + list.get(i).getStatusIcon() + "] " + list.get(i).getDescription());
                 }
                 System.out.println("\t=============================================");
                 continue;
             }
 
+            // Input 'mark' Command
+            if (command.equals("mark")) {
+                int index = Integer.parseInt(parts[1]) - 1;
+                list.get(index).setMark();
+                System.out.println("\t=============================================");
+                System.out.println("\tNice! I've marked this task as done:");
+                System.out.println("\t[X] " + list.get(index).getDescription());
+                System.out.println("\t=============================================");
+                continue;
+            }
+
+            // Input 'unmark' Command
+            if (command.startsWith("unmark")) {
+                int index = Integer.parseInt(parts[1]) - 1;
+                list.get(index).setUnmark();
+                System.out.println("\t=============================================");
+                System.out.println("\tOK, I've marked this task as not done yet:");
+                System.out.println("\t[ ] " + list.get(index).getDescription());
+                System.out.println("\t=============================================");
+                continue;
+            }
+
             // Adds to list
-            list.add(input);
+            Task task = new Task(input);
+            list.add(task);
             System.out.println("\t=============================================");
             System.out.println("\tadded: " + input);
             System.out.println("\t=============================================");
