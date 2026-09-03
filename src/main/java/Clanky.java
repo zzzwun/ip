@@ -65,7 +65,7 @@ public class Clanky {
             }
 
             // Input 'unmark' Command
-            if (command.startsWith("unmark")) {
+            if (command.equals("unmark")) {
                 int index = Integer.parseInt(parts[1]) - 1;
                 list.get(index).setUnmark();
                 System.out.println("\t" + divider);
