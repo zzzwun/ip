@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Clanky {
     public static void main(String[] args) {
-        // Initial Print Statments
+        // Initial Print Statements
         String banner = "  ____   _          _      _   _   _  __ __   __\n"
                 + " / ___| | |        / \\    | \\ | | | |/ / \\ \\ / /\n"
                 + "| |     | |       / _ \\   |  \\| | | ' /   \\ V / \n"
