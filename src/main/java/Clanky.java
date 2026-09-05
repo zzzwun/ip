@@ -41,27 +41,26 @@ public class Clanky {
                 case "bye":
                     break label;
 
-
                 // Input 'list' Command
-                case "list":
+                case "list": {
                     System.out.println("\t" + divider);
                     if (list.isEmpty()) {
                         System.out.println("\tNo Tasks Yet");
                     }
                     for (int i = 0; i < list.size(); i++) {
-                        System.out.println("\t" + (i + 1) + ".[" + list.get(i).getStatusIcon() + "] " + list.get(i).getDescription());
+                        System.out.println("\t" + (i + 1) + ". " + list.get(i));
                     }
                     System.out.println("\t" + divider);
                     continue;
+                }
 
-
-                    // Input 'mark' Command
+                // Input 'mark' Command
                 case "mark": {
                     int index = Integer.parseInt(parts[1]) - 1;
                     list.get(index).setMark();
                     System.out.println("\t" + divider);
                     System.out.println("\tNice! I've marked this task as done:");
-                    System.out.println("\t[X] " + list.get(index).getDescription());
+                    System.out.println("\t" + list.get(index));
                     System.out.println("\t" + divider);
                     continue;
                 }
@@ -72,18 +71,53 @@ public class Clanky {
                     list.get(index).setUnmark();
                     System.out.println("\t" + divider);
                     System.out.println("\tOK, I've marked this task as not done yet:");
-                    System.out.println("\t[ ] " + list.get(index).getDescription());
+                    System.out.println("\t" + list.get(index));
                     System.out.println("\t" + divider);
                     continue;
                 }
+
+                // Input 'to-do' command
+                case "todo": {
+                    Task task = new Todo(parts[1].trim());
+                    list.add(task);
+                    printAddedTask(task, list.size(), divider);
+                    continue;
+                }
+
+                // Input 'deadline' command
+                case "deadline": {
+                    String[] deadlineParts = parts[1].split("/by", 2);
+                    String desc = deadlineParts[0].trim();
+                    String by = deadlineParts[1].trim();
+                    Task task = new Deadline(desc, by);
+                    list.add(task);
+                    printAddedTask(task, list.size(), divider);
+                    continue;
+                }
+
+                // Input 'event' command
+                case "event": {
+                    String[] fromSplit = parts[1].split("/from", 2);
+                    String desc = fromSplit[0].trim();
+                    String[] toSplit = fromSplit[1].split("/to", 2);
+                    String from = toSplit[0].trim();
+                    String to = toSplit[1].trim();
+                    Task task = new Event(desc, from, to);
+                    list.add(task);
+                    printAddedTask(task, list.size(), divider);
+                    continue;
+                }
+
+                // Default case
+                default: {
+                    System.out.println("\t" + divider);
+                    System.out.println("\tRe-Enter Valid Command");
+                    System.out.println("\t" + divider);
+                    continue;
+                }
+
             }
 
-            // Adds to list
-            Task task = new Task(input);
-            list.add(task);
-            System.out.println("\t" + divider);
-            System.out.println("\tadded: " + input);
-            System.out.println("\t" + divider);
         }
 
         // Close Scanner
@@ -91,5 +125,13 @@ public class Clanky {
         System.out.println("\tBye. Hope to see you again soon!");
         System.out.println("\t" + divider);
         scanner.close();
+    }
+
+    private static void printAddedTask(Task task, int listSize, String divider) {
+        System.out.println("\t" + divider);
+        System.out.println("\tGot it. I've added this task:");
+        System.out.println("\t  " + task);
+        System.out.println("\tNow you have " + listSize + " task" + (listSize == 1 ? "" : "s") + " in the list.");
+        System.out.println("\t" + divider);
     }
 }

@@ -23,4 +23,14 @@ public class Task {
         this.isDone = false;
     }
 
+    // Inheritors will override
+    public String getTaskType() {
+        return " ";
+    }
+
+    @Override
+    public String toString() {
+        return "[" + getTaskType() + "][" + getStatusIcon() + "] " + description;
+    }
+
 }
