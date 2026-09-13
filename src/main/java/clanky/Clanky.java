@@ -1,3 +1,10 @@
+package clanky;
+
+import clanky.task.Deadline;
+import clanky.task.Event;
+import clanky.task.Task;
+import clanky.task.Todo;
+
 import java.util.Scanner;
 import java.util.ArrayList;
 
