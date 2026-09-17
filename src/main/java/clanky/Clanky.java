@@ -167,7 +167,7 @@ public class Clanky {
                         System.out.println("\t  " + removed);
                         System.out.println("\tNow you have " + list.size() + " task" + (list.size() == 1 ? "" : "s") + " in the list.");
                         System.out.println("\t" + divider);
-                        continue;
+                        break;
                     }
 
                     // Default case
