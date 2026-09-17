@@ -31,7 +31,7 @@ public class Clanky {
         String input = "";
 
         // Load from Storage & Populate List
-        Storage storage = new Storage("./data/clanke.txt");
+        Storage storage = new Storage("./data/clanky.txt");
         ArrayList<Task> list;
         try {
             list = storage.load();
