@@ -30,8 +30,21 @@ public class Clanky {
         Scanner scanner = new Scanner(System.in);
         String input = "";
 
+        // Load from Storage & Populate List
+        Storage storage = new Storage("./data/clanky.txt");
+        ArrayList<Task> list;
+        try {
+            list = storage.load();
+        } catch (ClankyException e) {
+            System.out.println("\t" + divider);
+            System.out.println("\tCouldn't load saved tasks: " + e.getMessage());
+            System.out.println("\tStarting with an empty list.");
+            System.out.println("\t" + divider);
+            list = new ArrayList<>();
+        }
+
         // Initialize ArrayList
-        ArrayList<Task> list = new ArrayList<>();
+        // ArrayList<Task> list = new ArrayList<>();
 
         // Scan for Input
         label:
@@ -46,6 +59,7 @@ public class Clanky {
             // Input 'bye' Command
             try {
                 switch (command) {
+                    // Input 'bye' Command
                     case "bye":
                         break label;
 
@@ -70,7 +84,7 @@ public class Clanky {
                         System.out.println("\tNice! I've marked this task as done:");
                         System.out.println("\t" + list.get(index));
                         System.out.println("\t" + divider);
-                        continue;
+                        break;
                     }
 
                     // Input 'unmark' Command
@@ -81,7 +95,7 @@ public class Clanky {
                         System.out.println("\tOK, I've marked this task as not done yet:");
                         System.out.println("\t" + list.get(index));
                         System.out.println("\t" + divider);
-                        continue;
+                        break;
                     }
 
                     // Input 'to-do' command
@@ -95,7 +109,7 @@ public class Clanky {
                         Task task = new Todo(parts[1].trim());
                         list.add(task);
                         printAddedTask(task, list.size(), divider);
-                        continue;
+                        break;
                     }
 
                     // Input 'deadline' command
@@ -117,7 +131,7 @@ public class Clanky {
                         Task task = new Deadline(desc, by);
                         list.add(task);
                         printAddedTask(task, list.size(), divider);
-                        continue;
+                        break;
                     }
 
                     // Input 'event' command
@@ -141,7 +155,7 @@ public class Clanky {
                         Task task = new Event(desc, from, to);
                         list.add(task);
                         printAddedTask(task, list.size(), divider);
-                        continue;
+                        break;
                     }
 
                     // Input 'delete' command
@@ -162,6 +176,10 @@ public class Clanky {
                     }
 
                 }
+
+                // Saves to Storage
+                storage.save(list);
+
             } catch (ClankyException e){
                 System.out.println("\t" + divider);
                 System.out.println("\t" + e.getMessage());

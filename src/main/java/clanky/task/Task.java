@@ -25,7 +25,7 @@ public class Task {
         this.isDone = false;
     }
 
-    // Inheritors will override
+    // All Task Types will Override
     public String getTaskType() {
         return " ";
     }
@@ -33,6 +33,11 @@ public class Task {
     @Override
     public String toString() {
         return "[" + getTaskType() + "][" + getStatusIcon() + "] " + description;
+    }
+
+    // Deadline & Event will Override
+    public String toSaveFormat() {
+        return getTaskType() + " | " + (isDone ? "1" : "0") + " | " + description;
     }
 
 }
