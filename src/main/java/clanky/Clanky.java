@@ -64,7 +64,7 @@ public class Clanky {
 
                     // Input 'mark' Command
                     case "mark": {
-                        int index = getIndex(parts, list);
+                        int index = getIndex(parts, list, "mark");
                         list.get(index).setMark();
                         System.out.println("\t" + divider);
                         System.out.println("\tNice! I've marked this task as done:");
@@ -75,7 +75,7 @@ public class Clanky {
 
                     // Input 'unmark' Command
                     case "unmark": {
-                        int index = getIndex(parts, list);
+                        int index = getIndex(parts, list, "unmark");
                         list.get(index).setUnmark();
                         System.out.println("\t" + divider);
                         System.out.println("\tOK, I've marked this task as not done yet:");
@@ -144,6 +144,18 @@ public class Clanky {
                         continue;
                     }
 
+                    // Input 'delete' command
+                    case "delete": {
+                        int index = getIndex(parts, list, "delete");
+                        Task removed = list.remove(index);
+                        System.out.println("\t" + divider);
+                        System.out.println("\tNoted. I've removed this task:");
+                        System.out.println("\t  " + removed);
+                        System.out.println("\tNow you have " + list.size() + " task" + (list.size() == 1 ? "" : "s") + " in the list.");
+                        System.out.println("\t" + divider);
+                        continue;
+                    }
+
                     // Default case
                     default: {
                         throw new ClankyException("Idk what's that command.");
@@ -166,10 +178,10 @@ public class Clanky {
     }
 
     // HELPER FUNCTIONS
-    private static int getIndex(String[] parts, ArrayList<Task> list) throws ClankyException {
+    private static int getIndex(String[] parts, ArrayList<Task> list, String action) throws ClankyException {
         // Catch Missing Arguments
         if (parts.length < 2) {
-            throw new ClankyException("Please specify a Task Number.");
+            throw new ClankyException("Please specify a Task Number to " + action + ".");
         }
 
         int index;
