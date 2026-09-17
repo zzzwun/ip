@@ -5,6 +5,7 @@ import clanky.task.Event;
 import clanky.task.Task;
 import clanky.task.Todo;
 
+import java.io.File;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -31,7 +32,9 @@ public class Clanky {
         String input = "";
 
         // Load from Storage & Populate List
-        Storage storage = new Storage("./data/clanky.txt");
+        Storage storage = new Storage(
+                System.getProperty("user.home") + File.separator + ".clanky" + File.separator + "clanky.txt"
+        );
         ArrayList<Task> list;
         try {
             list = storage.load();
