@@ -1,5 +1,13 @@
 # Clanky User Guide
 
+```
+  ____   _          _      _   _   _  __ __   __
+ / ___| | |        / \    | \ | | | |/ / \ \ / /
+| |     | |       / _ \   |  \| | | ' /   \ V / 
+| |___  | |___   / ___ \  | |\  | | . \    | |  
+ \____| |_____| /_/   \_\ |_| \_| |_|\_\   |_|
+```
+
 Clanky is a command-line task manager that helps you keep track of **todos**, **deadlines**, and **events** — and it remembers your tasks between sessions automatically.
 
 - [Quick start](#quick-start)
