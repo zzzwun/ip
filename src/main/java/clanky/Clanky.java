@@ -8,10 +8,9 @@ import clanky.task.TaskList;
 
 import java.io.File;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class Clanky {
-    public static void main(String[] args) throws ClankyException {
+    public static void main(String[] args){
 
         // Instantiate UI to handle printing
         UI ui = new UI();
@@ -50,7 +49,6 @@ public class Clanky {
             String command = parts[0];
             String argument = parts.length > 1 ? parts[1] : null;
 
-            // Input 'bye' Command
             try {
                 switch (command) {
                     // Input 'bye' Command
