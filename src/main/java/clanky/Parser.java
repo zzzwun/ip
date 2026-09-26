@@ -86,5 +86,11 @@ public class Parser {
         return new Event(desc, from, to);
     }
 
+    public static String parseFindArgs(String args) throws ClankyException {
+        if (args == null || args.isBlank()) {
+            throw new ClankyException("Please specify a keyword to search for");
+        }
+        return args.trim();
+    }
 
 }
