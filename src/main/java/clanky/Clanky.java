@@ -7,7 +7,26 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Entry point for the Clanky application.
+ * Clanky is a command-line chatbot that lets users add, list, mark, unmark,
+ * delete, and search tasks (todos, deadlines, and events), persisting them
+ * to disk between sessions via {@link Storage}.
+ * <p>
+ * This class is responsible only for orchestration: reading user input,
+ * dispatching to {@link Parser} for interpretation, applying changes via
+ * {@link TaskList}, and reporting results via {@link UI}. It does not itself
+ * contain parsing, validation, or display logic.
+ */
 public class Clanky {
+
+    /**
+     * Starts the Clanky application. Loads any previously saved tasks,
+     * then repeatedly reads a line of user input, interprets it as a
+     * command, and executes it, until the user enters "bye".
+     *
+     * @param args command-line arguments (unused).
+     */
     public static void main(String[] args){
 
         // Instantiate UI to handle printing
