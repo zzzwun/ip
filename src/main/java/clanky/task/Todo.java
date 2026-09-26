@@ -2,12 +2,13 @@ package clanky.task;
 
 /**
  * Represents a To-Do task.
- * A {@code Event} extends {@link Task} and uses a description.
+ * A {@code Event} extends {@link Task} and requires a description.
  */
 public class Todo extends Task{
 
     /**
-     * Creates a new To-Do task with the given description,
+     * Creates a new To-Do task with the given description
+     *
      * @param  description a description of the task to-do
      */
     public Todo(String description) {
