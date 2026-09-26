@@ -4,6 +4,7 @@ import clanky.task.Task;
 import clanky.task.TaskList;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Clanky {
@@ -105,6 +106,14 @@ public class Clanky {
                         int index = Parser.parseIndex(parts, tasks, "delete");
                         Task removed = tasks.remove(index);
                         ui.showTaskDeleted(removed, tasks.size());
+                        break;
+                    }
+
+                    // Input 'find' command
+                    case "find": {
+                        String keyword = Parser.parseFindArgs(argument);
+                        ArrayList<Task> matches = tasks.find(keyword);
+                        ui.showFindResults(matches);
                         break;
                     }
 
