@@ -1,10 +1,13 @@
 package clanky.task;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Event extends Task{
 
-    protected String from, to;
+    protected LocalDate from, to;
 
-    public Event(String description, String from, String to) {
+    public Event(String description, LocalDate from, LocalDate to) {
         super(description);
         this.from = from;
         this.to = to;
@@ -17,7 +20,8 @@ public class Event extends Task{
 
     @Override
     public String toString() {
-        return super.toString() + " (from: " + from + " to: " + to + ")";
+        DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("MMM dd yyyy");
+        return super.toString() + " (from: " + from.format(outputFormat) + " to: " + to.format(outputFormat) + ")";
     }
 
     @Override

@@ -4,10 +4,11 @@ import clanky.task.Task;
 import clanky.task.Todo;
 import clanky.task.Deadline;
 import clanky.task.Event;
-import clanky.ClankyException;
 
 import java.io.*;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.time.LocalDate;
 
 public class Storage {
     private final String filePath;
@@ -58,19 +59,26 @@ public class Storage {
         boolean isDone = fields[1].equals("1");
 
         Task task;
-        switch (type) {
-            case "T":
-                task = new Todo(fields[2]);
-                break;
-            case "D":
-                task = new Deadline(fields[2], fields[3]);
-                break;
-            case "E":
-                task = new Event(fields[2], fields[3], fields[4]);
-                break;
-            default:
-                throw new ClankyException("Corrupted Save File: Unkown Task Type '" + type + "'");
+        try {
+            switch (type) {
+                case "T":
+                    task = new Todo(fields[2]);
+                    break;
+                case "D":
+                    task = new Deadline(fields[2], LocalDate.parse(fields[3]));
+                    break;
+                case "E":
+                    task = new Event(fields[2], LocalDate.parse(fields[3]), LocalDate.parse(fields[4]));
+                    break;
+                default:
+                    throw new ClankyException("Corrupted Save File: Unkown Task Type '" + type + "'");
+            }
+        } catch (DateTimeParseException e) {
+            throw new ClankyException("Corrupted save file: Invalid date on line: " + line);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new ClankyException("Corrupted save file: Incomplete line: " + line);
         }
+        
         if (isDone) {
             task.setMark();
         }
