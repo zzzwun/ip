@@ -3,6 +3,7 @@ package clanky;
 import clanky.task.Deadline;
 import clanky.task.Event;
 import clanky.task.TaskList;
+import clanky.task.Todo;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -34,11 +35,11 @@ public class Parser {
         return index;
     }
 
-    public static String parseTodoArgs(String args) throws ClankyException {
+    public static Todo parseTodoArgs(String args) throws ClankyException {
         if (args == null || args.isBlank()) {
             throw new ClankyException("Description of ToDo can't be empty.");
         }
-        return args.trim();
+        return new Todo(args.trim());
     }
 
     public static Deadline parseDeadlineArgs(String args) throws ClankyException {

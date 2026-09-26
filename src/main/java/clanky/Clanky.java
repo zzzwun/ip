@@ -1,9 +1,6 @@
 package clanky;
 
-import clanky.task.Deadline;
-import clanky.task.Event;
 import clanky.task.Task;
-import clanky.task.Todo;
 import clanky.task.TaskList;
 
 import java.io.File;
@@ -81,8 +78,7 @@ public class Clanky {
 
                     // Input 'to-do' command
                     case "todo": {
-                        String desc = Parser.parseTodoArgs(argument);
-                        Task task = new Todo(desc);
+                        Task task = Parser.parseTodoArgs(argument);
                         tasks.add(task);
                         ui.showTaskAdded(task, tasks.size());
                         break;
