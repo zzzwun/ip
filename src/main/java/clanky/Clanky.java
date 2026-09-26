@@ -4,6 +4,7 @@ import clanky.task.Deadline;
 import clanky.task.Event;
 import clanky.task.Task;
 import clanky.task.Todo;
+import clanky.task.TaskList;
 
 import java.io.File;
 import java.util.Scanner;
@@ -11,43 +12,27 @@ import java.util.ArrayList;
 
 public class Clanky {
     public static void main(String[] args) throws ClankyException {
-        // Declare Strings
-        String banner = "  ____   _          _      _   _   _  __ __   __\n"
-                + " / ___| | |        / \\    | \\ | | | |/ / \\ \\ / /\n"
-                + "| |     | |       / _ \\   |  \\| | | ' /   \\ V / \n"
-                + "| |___  | |___   / ___ \\  | |\\  | | . \\    | |  \n"
-                + " \\____| |_____| /_/   \\_\\ |_| \\_| |_|\\_\\   |_|";
 
-        String divider = "=================================================";
-
-        // Init Print Statements
-        System.out.println(banner);
-        System.out.println(divider);
-        System.out.println("Hello! I'm Clanky.");
-        System.out.println("What can I do for you ?");
-        System.out.println(divider);
-
-        // Initialize Scanner
-        Scanner scanner = new Scanner(System.in);
-        String input = "";
+        // Instantiate UI to handle printing
+        UI ui = new UI();
+        ui.showWelcome();
 
         // Load from Storage & Populate List
         Storage storage = new Storage(
                 System.getProperty("user.home") + File.separator + ".clanky" + File.separator + "clanky.txt"
         );
-        ArrayList<Task> list;
+
+        TaskList tasks;
         try {
-            list = storage.load();
+            tasks = new TaskList(storage.load());
         } catch (ClankyException e) {
-            System.out.println("\t" + divider);
-            System.out.println("\tCouldn't load saved tasks: " + e.getMessage());
-            System.out.println("\tStarting with an empty list.");
-            System.out.println("\t" + divider);
-            list = new ArrayList<>();
+            ui.showLoadError(e.getMessage());
+            tasks = new TaskList();
         }
 
-        // Initialize ArrayList
-        // ArrayList<Task> list = new ArrayList<>();
+        // Initialize Scanner
+        Scanner scanner = new Scanner(System.in);
+        String input = "";
 
         // Scan for Input
         label:
@@ -55,9 +40,15 @@ public class Clanky {
             // Gets Input
             input = scanner.nextLine();
 
+            // Checks empty input
+            if (input.trim().isEmpty()) {
+                continue;
+            }
+
             // Splits Up Input Into Command & Arguments
-            String[] parts = input.trim().split("\\s+", 2);
+            String[] parts = Parser.parse(input);
             String command = parts[0];
+            String argument = parts.length > 1 ? parts[1] : null;
 
             // Input 'bye' Command
             try {
@@ -68,108 +59,60 @@ public class Clanky {
 
                     // Input 'list' Command
                     case "list": {
-                        System.out.println("\t" + divider);
-                        if (list.isEmpty()) {
-                            System.out.println("\tNo Tasks Yet");
-                        }
-                        for (int i = 0; i < list.size(); i++) {
-                            System.out.println("\t" + (i + 1) + ". " + list.get(i));
-                        }
-                        System.out.println("\t" + divider);
-                        continue;
+                        ui.showList(tasks);
+                        break;
                     }
 
                     // Input 'mark' Command
                     case "mark": {
-                        int index = getIndex(parts, list, "mark");
-                        list.get(index).setMark();
-                        System.out.println("\t" + divider);
-                        System.out.println("\tNice! I've marked this task as done:");
-                        System.out.println("\t" + list.get(index));
-                        System.out.println("\t" + divider);
+                        int index = Parser.parseIndex(parts, tasks, "mark");
+                        Task task = tasks.get(index);
+                        task.setMark();
+                        ui.showTaskMarked(task);
                         break;
                     }
 
                     // Input 'unmark' Command
                     case "unmark": {
-                        int index = getIndex(parts, list, "unmark");
-                        list.get(index).setUnmark();
-                        System.out.println("\t" + divider);
-                        System.out.println("\tOK, I've marked this task as not done yet:");
-                        System.out.println("\t" + list.get(index));
-                        System.out.println("\t" + divider);
+                        int index = Parser.parseIndex(parts, tasks, "unmark");
+                        Task task = tasks.get(index);
+                        task.setUnmark();
+                        ui.showTaskUnmarked(task);
                         break;
                     }
 
                     // Input 'to-do' command
                     case "todo": {
-                        // Catch Missing Argument
-                        if (parts.length < 2 || parts[1].isBlank()) {
-                            throw new ClankyException("Description of ToDo can't be empty.");
-                        }
-
-                        // Instantiate new Task
-                        Task task = new Todo(parts[1].trim());
-                        list.add(task);
-                        printAddedTask(task, list.size(), divider);
+                        String desc = Parser.parseTodoArgs(argument);
+                        Task task = new Todo(desc);
+                        tasks.add(task);
+                        ui.showTaskAdded(task, tasks.size());
                         break;
                     }
 
                     // Input 'deadline' command
                     case "deadline": {
-                        // Catch Wrong Formatting
-                        if (parts.length < 2 || !parts[1].contains("/by")) {
-                            throw new ClankyException("Use the format: deadline <description> /by <time>");
-                        }
-                        String[] deadlineParts = parts[1].split("/by", 2);
-                        String desc = deadlineParts[0].trim();
-                        String by = deadlineParts[1].trim();
-
-                        // Catch Empty Arguments
-                        if (desc.isEmpty() || by.isEmpty()) {
-                            throw new ClankyException("Description and By are required.");
-                        }
-
-                        // Instantiate new Task
-                        Task task = new Deadline(desc, by);
-                        list.add(task);
-                        printAddedTask(task, list.size(), divider);
+                        String[] deadlineArgs = Parser.parseDeadlineArgs(argument);
+                        Task task = new Deadline(deadlineArgs[0], deadlineArgs[1]);
+                        tasks.add(task);
+                        ui.showTaskAdded(task, tasks.size());
                         break;
                     }
 
                     // Input 'event' command
                     case "event": {
-                        // Catch Wrong Formatting
-                        if (parts.length < 2 || !parts[1].contains("/from") || !parts[1].contains("/to")) {
-                            throw new ClankyException("Use the format: event <description> /from <start> /to <end>");
-                        }
-                        String[] fromSplit = parts[1].split("/from", 2);
-                        String desc = fromSplit[0].trim();
-                        String[] toSplit = fromSplit[1].split("/to", 2);
-                        String from = toSplit[0].trim();
-                        String to = toSplit[1].trim();
-
-                        // Catch Empty Arguments
-                        if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                            throw new ClankyException("Description, From, and To are required.");
-                        }
-
-                        // Instantiate new Task
-                        Task task = new Event(desc, from, to);
-                        list.add(task);
-                        printAddedTask(task, list.size(), divider);
+                        String[] eventArgs = Parser.parseEventArgs(argument);
+                        Task task = new Event(eventArgs[0], eventArgs[1], eventArgs[2]);
+                        tasks.add(task);
+                        ui.showTaskAdded(task, tasks.size());
                         break;
                     }
 
                     // Input 'delete' command
                     case "delete": {
-                        int index = getIndex(parts, list, "delete");
-                        Task removed = list.remove(index);
-                        System.out.println("\t" + divider);
-                        System.out.println("\tNoted. I've removed this task:");
-                        System.out.println("\t  " + removed);
-                        System.out.println("\tNow you have " + list.size() + " task" + (list.size() == 1 ? "" : "s") + " in the list.");
-                        System.out.println("\t" + divider);
+                        int index = Parser.parseIndex(parts, tasks, "delete");
+                        Task removed = tasks.remove(index);
+                        ui.showTaskDeleted(removed, tasks.size());
                         break;
                     }
 
@@ -181,50 +124,17 @@ public class Clanky {
                 }
 
                 // Saves to Storage
-                storage.save(list);
+                storage.save(tasks.asArrayList());
 
             } catch (ClankyException e){
-                System.out.println("\t" + divider);
-                System.out.println("\t" + e.getMessage());
-                System.out.println("\t" + divider);
+                ui.showError(e.getMessage());
             }
 
         }
 
         // Close Scanner
-        System.out.println("\t" + divider);
-        System.out.println("\tBye. Hope to see you again soon!");
-        System.out.println("\t" + divider);
+        ui.showGoodbye();
         scanner.close();
     }
 
-    // HELPER FUNCTIONS
-    private static int getIndex(String[] parts, ArrayList<Task> list, String action) throws ClankyException {
-        // Catch Missing Arguments
-        if (parts.length < 2) {
-            throw new ClankyException("Please specify a Task Number to " + action + ".");
-        }
-
-        int index;
-        // Catch Invalid Task Number
-        try {
-            index = Integer.parseInt(parts[1]) - 1;
-        } catch(NumberFormatException e) {
-            throw new ClankyException("That's not a valid Task number.");
-        }
-
-        // Catch Index Out Of Array
-        if (index < 0 || index >= list.size()) {
-            throw new ClankyException("That Task Number does not exist.");
-        }
-        return index;
-    }
-
-    private static void printAddedTask(Task task, int listSize, String divider) {
-        System.out.println("\t" + divider);
-        System.out.println("\tGot it. I've added this task:");
-        System.out.println("\t  " + task);
-        System.out.println("\tNow you have " + listSize + " task" + (listSize == 1 ? "" : "s") + " in the list.");
-        System.out.println("\t" + divider);
-    }
 }
