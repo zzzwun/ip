@@ -36,13 +36,13 @@ public class UI {
         System.out.println("\t" + DIVIDER);
     }
 
-    public void showList(TaskList list) {
+    public void showList(TaskList tasks) {
         System.out.println("\t" + DIVIDER);
-        if (list.isEmpty()) {
+        if (tasks.isEmpty()) {
             System.out.println("\tNo Tasks Yet");
         }
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println("\t" + (i + 1) + ". " + list.get(i));
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println("\t" + (i + 1) + ". " + tasks.get(i));
         }
         System.out.println("\t" + DIVIDER);
     }
