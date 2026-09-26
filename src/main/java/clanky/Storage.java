@@ -10,13 +10,29 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
+/**
+ * Handles reading and writing tasks to a save file on disk,
+ * so tasks persist between application runs.
+ */
 public class Storage {
     private final String filePath;
 
+    /**
+     * Creates a Storage bound to the given file path.
+     *
+     * @param filePath the path to the save file.
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Writes the given tasks to the save file, creating parent directories
+     * if needed.
+     *
+     * @param list the tasks to save.
+     * @throws ClankyException if the file can't be written.
+     */
     public void save(ArrayList<Task> list) throws ClankyException {
         try {
             File file = new File(filePath);
@@ -31,6 +47,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads tasks from the save file, or returns an empty list if no save
+     * file exists yet.
+     *
+     * @return the loaded tasks.
+     * @throws ClankyException if the file exists but can't be read or parsed.
+     */
     public ArrayList<Task> load() throws ClankyException {
         ArrayList<Task> list = new ArrayList<>();
         File file = new File(filePath);
@@ -50,6 +73,13 @@ public class Storage {
         return list;
     }
 
+    /**
+     * Parses a single save-file line back into a {@link Task}.
+     *
+     * @param line one pipe-delimited line from the save file.
+     * @return the reconstructed task.
+     * @throws ClankyException if the line is corrupted, incomplete, or has an unknown task type.
+     */
     private Task parseLine(String line) throws ClankyException {
         String[] fields = line.split("\\|");
         for (int i = 0; i < fields.length; i ++) {
