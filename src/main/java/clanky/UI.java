@@ -1,8 +1,7 @@
 package clanky;
 
 import clanky.task.Task;
-
-import java.util.ArrayList;
+import clanky.task.TaskList;
 
 public class UI {
 
@@ -37,7 +36,7 @@ public class UI {
         System.out.println("\t" + DIVIDER);
     }
 
-    public void showList(ArrayList<Task> list) {
+    public void showList(TaskList list) {
         System.out.println("\t" + DIVIDER);
         if (list.isEmpty()) {
             System.out.println("\tNo Tasks Yet");
