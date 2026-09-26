@@ -1,6 +1,11 @@
 package clanky;
 
+import clanky.task.Deadline;
+import clanky.task.Event;
 import clanky.task.TaskList;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 public class Parser {
 
@@ -36,32 +41,48 @@ public class Parser {
         return args.trim();
     }
 
-    public static String[] parseDeadlineArgs(String args) throws ClankyException {
+    public static Deadline parseDeadlineArgs(String args) throws ClankyException {
         if (args == null || !args.contains("/by")) {
             throw new ClankyException("Please use the format: deadline <description> /by <time>");
         }
         String[] deadlineParts = args.split("/by", 2);
         String desc = deadlineParts[0].trim();
-        String by = deadlineParts[1].trim();
-        if (desc.isBlank() || by.isBlank()) {
+        String byText = deadlineParts[1].trim();
+        if (desc.isBlank() || byText.isBlank()) {
             throw new ClankyException("Both description and /by time are required.");
         }
-        return new String[]{desc, by};
+
+        LocalDate by;
+        try {
+            by = LocalDate.parse(byText);
+        } catch (DateTimeParseException e) {
+            throw new ClankyException("Use yyyy-mm-dd format for dates, e.g. 2026-11-11");
+        }
+        return new Deadline(desc, by);
     }
 
-    public static String[] parseEventArgs(String args) throws ClankyException {
+    public static Event parseEventArgs(String args) throws ClankyException {
         if (args == null || !args.contains("/from") || !args.contains("/to")) {
             throw new ClankyException("Please use the format: event <description> /from <start> /to <end>");
         }
         String[] fromSplit = args.split("/from", 2);
         String desc = fromSplit[0].trim();
         String[] toSplit = fromSplit[1].split("/to", 2);
-        String from = toSplit[0].trim();
-        String to = toSplit[1].trim();
-        if (desc.isBlank() || from.isBlank() || to.isBlank()) {
+        String fromText = toSplit[0].trim();
+        String toText = toSplit[1].trim();
+        if (desc.isBlank() || fromText.isBlank() || toText.isBlank()) {
             throw new ClankyException("Description, /from, and /to are all required.");
         }
-        return new String[]{desc, from, to};
+
+        LocalDate from;
+        LocalDate to;
+        try {
+            from = LocalDate.parse(fromText);
+            to = LocalDate.parse(toText);
+        } catch (DateTimeParseException e) {
+            throw new ClankyException("Use yyyy-mm-dd format for dates, e.g. 2026-11-11");
+        }
+        return new Event(desc, from, to);
     }
 
 
