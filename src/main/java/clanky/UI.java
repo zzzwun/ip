@@ -3,6 +3,8 @@ package clanky;
 import clanky.task.Task;
 import clanky.task.TaskList;
 
+import java.util.ArrayList;
+
 public class UI {
 
     private static final String BANNER = "  ____   _          _      _   _   _  __ __   __\n"
@@ -74,6 +76,19 @@ public class UI {
         System.out.println("\t" + DIVIDER);
         System.out.println("\tOK, I've marked this task as not done yet:");
         System.out.println("\t" + task);
+        System.out.println("\t" + DIVIDER);
+    }
+
+    public void showFindResults(ArrayList<Task> matches) {
+        System.out.println("\t" + DIVIDER);
+        if (matches.isEmpty()) {
+            System.out.println("\tNo matching tasks found.");
+        } else {
+            System.out.println("\tHere are the matching tasks in your list:");
+            for (int i = 0; i < matches.size(); i++) {
+                System.out.println("\t" + (i + 1) + ". " + matches.get(i));
+            }
+        }
         System.out.println("\t" + DIVIDER);
     }
 
