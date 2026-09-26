@@ -6,13 +6,13 @@ import java.util.ArrayList;
 
 public class UI {
 
-    String BANNER = "  ____   _          _      _   _   _  __ __   __\n"
+    private static final String BANNER = "  ____   _          _      _   _   _  __ __   __\n"
             + " / ___| | |        / \\    | \\ | | | |/ / \\ \\ / /\n"
             + "| |     | |       / _ \\   |  \\| | | ' /   \\ V / \n"
             + "| |___  | |___   / ___ \\  | |\\  | | . \\    | |  \n"
             + " \\____| |_____| /_/   \\_\\ |_| \\_| |_|\\_\\   |_|";
 
-    String DIVIDER = "=================================================";
+    private static final String DIVIDER = "=================================================";
 
     public void showWelcome() {
         System.out.println(BANNER);
