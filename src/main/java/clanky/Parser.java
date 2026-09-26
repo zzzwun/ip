@@ -1,6 +1,5 @@
 package clanky;
 
-import clanky.ClankyException;
 import clanky.task.TaskList;
 
 public class Parser {
